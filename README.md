@@ -21,7 +21,8 @@ You will need the following things properly installed on your computer.
 
 ## Notes
 
-The game Randomize who plays the first, you can choose your piece <br>
+The game Randomize who plays the first, you can choose your piece. <br>
+At the end of the game in the box appears the name of the winner player<br>
 
 Check for winner: <br>
 * Search the movements of the player and check if he has any of the winning movements.<br>
