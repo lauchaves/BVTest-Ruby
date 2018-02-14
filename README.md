@@ -19,7 +19,7 @@ You will need the following things properly installed on your computer.
 * `ruby tic_tac_toe.rb`
 * Follow the instructions & enjoy the game!
 
-#Notes
+## Notes
 
 The game Randomize who plays the first, you can choose your piece <br>
 
