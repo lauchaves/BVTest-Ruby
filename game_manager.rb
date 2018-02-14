@@ -21,17 +21,17 @@ class GameManager
   def check_for_winner(player)
     @winning_moves.each_with_index do |value, index|
       if @winning_moves[index].all? { |move| player.moves.include?(move) }
-        puts "\n #{player.name}: "
+        Display.upwinname
+        puts "\t    #{player.name}: "
+        Display.downwinname
         Display.winner
-        puts "\n Thanks for playing!"
-        puts ""
+        Display.thanks
         @game_over = true
         break
       elsif @move_counter == 9
           puts "\n"
           Display.draw
-          puts "\n Thanks for playing!"
-          puts ""
+          Display.thanks
           @game_over = true
           break
         end
@@ -40,9 +40,9 @@ class GameManager
 
   def play
     Display.display_board
-
+    @temp_p = $players.shuffle! #Randomize who gets the first
     until @game_over
-      $players.each do |player|
+      @temp_p.each do |player|
         player.take_turn
         @move_counter += 1
         Display.display_board
@@ -50,6 +50,10 @@ class GameManager
         break if @game_over
       end
     end
+
+    Display.play_again
+    play_again()
+
   end
 
   def start
@@ -95,6 +99,20 @@ class GameManager
     $players << bot
     puts "#{name}, #{symbol}"
     Display.bot_is
+  end
+
+  def play_again()
+    answer = gets.chomp.upcase
+
+    if answer == "Y"
+      initialize()
+      start()
+    elsif answer == "N"
+      Display.game_end
+      sleep(2.5)
+    else
+      Display.invalid_choice
+    end
   end
 
 end

@@ -2,37 +2,91 @@ require_relative 'Player'
 
 class Bot < Player
   def take_turn
-    loop do
+    print "\n #{@name} [#{@symbol}] moving "
 
-#
-      #jalar la lista del player
-#      @player_moves_temp = $players[0].moves
+    @player_moves_temp = $players[0].moves
+    @IA_moves_temp = $players[1].moves
+    @CORNERS = [:A1, :C1, :A3, :C3]
 
-      #print @player_moves_temp
-      #print $IA_Possible_winning_moves
-      #print player_moves_temp
-      #compararla con la suya y si si esta la vara quitar el par ordenado
-
-#      $IA_Possible_winning_moves.each_with_index do |value, index|
-#          $IA_Possible_winning_moves[index].each_with_index do |v, i|
-#            print @player_moves_temp.include?(v)
-#            $IA_Possible_winning_moves.delete_if(|v)
-#            puts $IA_Possible_winning_moves
-#          end
-
-        #if $IA_Possible_winning_moves[index].all? { |move| @player_moves_temp.include?(move) }
-        #  puts "hi"
-        #  break
-        #end
-      #end
-
-      move = $board.keys.sample.to_sym
-      if $board[move] == " "
-        @moves << move
-        $board[move] = @symbol
-        puts "\n #{@name} [#{@symbol}] has made a move at #{move.to_s}!"
-        break
+    case
+      when winning_move() != nil
+        input = winning_move
+      when blocking_move != nil
+        input = blocking_move
+      when center()
+        input = :B2
+      when opposite_corner() != nil && taken(opposite_corner()) == false
+        input = opposite_corner
+      when corner()
+        input = corner
+      else
+        until !taken(input)
+          input = $board.keys.sample.to_sym
       end
     end
+    @moves << input
+    $board[input] = @symbol
   end
+
+   def other
+     symbol == "X" ? "O" : "X"
+   end
+
+   def winning_move
+    winning_row =  $IA_Possible_winning_moves.find do |combo|
+     ($board[combo[0]] == symbol && $board[combo[1]] == symbol && $board[combo[2]] == " ") ||
+     ($board[combo[2]] == symbol && $board[combo[1]] == symbol && $board[combo[0]] == " ") ||
+     ($board[combo[0]] == symbol && $board[combo[2]] == symbol && $board[combo[1]] == " ")
+    end
+    if winning_row != nil
+     winning_cell = winning_row.find {|cell| $board[cell] == " "}
+    end
+  end
+
+    def blocking_move
+      winning_row =  $IA_Possible_winning_moves.find do |combo|
+       ($board[combo[0]] == other && $board[combo[1]] == other && $board[combo[2]] == " ") ||
+       ($board[combo[1]] == other && $board[combo[2]] == other && $board[combo[0]] == " ") ||
+       ($board[combo[2]] == other && $board[combo[0]] == other && $board[combo[1]] == " ")
+      end
+      if winning_row != nil
+       winning_cell = winning_row.find {|cell| $board[cell] == " "}
+      end
+    end
+
+    def center
+      $board[4] == " "
+    end
+
+    def corners
+      @CORNERS.shuffle!
+    end
+
+    def corner
+      corners().find {|corner| $board[corner] == " "}
+    end
+
+    def opposite_corner
+      case
+      when taken(:A1) && !taken(:C3)
+         :C3
+       when taken(:C3) && !taken(:A1)
+         :A1
+       when taken(:C1) && !taken(:A3)
+         :A3
+       when taken(:A3) && !taken(:C1)
+         :C1
+       else
+         nil
+      end
+    end
+
+    def position(input)
+      $board[input]
+    end
+
+    def taken(input)
+      position(input) == "X" || position(input) == "O"
+    end
+
 end

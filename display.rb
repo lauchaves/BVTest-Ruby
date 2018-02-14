@@ -39,7 +39,7 @@ class Display
   end
 
   def self.game_instructions
-    puts "\n DIRECTIONS: Try to get three in a row by marking spaces on the board!"
+    puts "\n Instructions: Try to get three in a row by marking spaces on the board!"
     puts " Use board coordinates (A1, B3, C2, etc.) when making moves."
   end
 
@@ -98,6 +98,28 @@ class Display
     puts " > is ready!"
   end
 
+  def self.upwinname
+    puts "
+      ╔══════════════╗
+    "
+  end
 
+  def self.downwinname
+    puts "
+      ╚══════════════╝
+    "
+  end
+
+  def self.play_again
+    puts "\n Want to play again? [Y/N]"
+  end
+
+  def self.thanks
+    puts "\n Thanks for playing!\n "
+  end
+
+  def self.game_end
+    puts "Game end!"
+  end
 
 end
